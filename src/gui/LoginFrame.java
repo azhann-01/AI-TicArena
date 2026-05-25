@@ -61,9 +61,9 @@ public class LoginFrame extends JFrame {
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         backButton.addActionListener(
-                e -> {
-                    new WelcomeFrame();
-                    dispose();
+            e -> {
+                new WelcomeFrame();
+                dispose();
                 });
 
         mainPanel.add(Box.createVerticalGlue());
@@ -86,32 +86,26 @@ public class LoginFrame extends JFrame {
                 String password = String.valueOf(
                 passwordField.getPassword());
                     
-                    if (username.isEmpty()
-                        || password.isEmpty()) {
-                            JOptionPane.showMessageDialog(
-                            null,
-                            "Fields cannot be empty");
-                        return;
-                    }
+                if (username.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                    null,
+                    "Fields cannot be empty");
+                    return;
+                }
 
-                    UserDAO dao = new UserDAO();
+                UserDAO dao = new UserDAO();
 
-                    boolean success = dao.loginUser(
-                            username,
-                            password);
+                boolean success = dao.loginUser(
+                    username,
+                    password);
 
-                    if (success) {
-                        JOptionPane.showMessageDialog(
-                            null,
-                            "Login Successful");
-
-                        dispose();
-                    }
-
+                if (success) {
+                    new LobbyFrame(username);
+                    dispose();
+                }
                 else {
-                        JOptionPane.showMessageDialog(
-                            null,
-                            "Invalid Username or Password");
+                    JOptionPane.showMessageDialog(null,
+                        "Invalid Username or Password");
                     }
                 });
 
