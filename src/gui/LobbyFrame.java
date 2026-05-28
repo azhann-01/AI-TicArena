@@ -10,10 +10,10 @@ public class LobbyFrame extends JFrame {
     JButton leaderboardButton;
     JButton logoutButton;
 
-    public LobbyFrame(String username){
+    public LobbyFrame(String username) {
 
         setTitle("TicArena");
-        setSize(500,500);
+        setSize(500, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -29,9 +29,14 @@ public class LobbyFrame extends JFrame {
         welcome.setForeground(Color.DARK_GRAY);
         welcome.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        Dimension buttonSize = new Dimension(180,40);
+        Dimension buttonSize = new Dimension(180, 40);
 
         findMatchButton = new JButton("Find Match");
+        findMatchButton.addActionListener(
+                e -> {
+                    new WaitingRoomFrame(username);
+                    dispose();
+                });
 
         friendButton = new JButton("Play With Friend");
 
@@ -39,18 +44,17 @@ public class LobbyFrame extends JFrame {
 
         logoutButton = new JButton("Logout");
 
-        JButton buttons[] = {findMatchButton, friendButton, leaderboardButton, logoutButton};
+        JButton buttons[] = { findMatchButton, friendButton, leaderboardButton, logoutButton };
 
-        for(JButton b : buttons){
+        for (JButton b : buttons) {
             b.setMaximumSize(buttonSize);
             b.setAlignmentX(Component.CENTER_ALIGNMENT);
         }
         logoutButton.addActionListener(
-            e -> {
-                new WelcomeFrame();
-                dispose();
-                }
-        );
+                e -> {
+                    new WelcomeFrame();
+                    dispose();
+                });
 
         mainPanel.add(Box.createVerticalGlue());
         mainPanel.add(title);
@@ -58,13 +62,13 @@ public class LobbyFrame extends JFrame {
         mainPanel.add(welcome);
         mainPanel.add(Box.createVerticalStrut(40));
         mainPanel.add(findMatchButton);
-        mainPanel.add(Box.createVerticalStrut(15));  
+        mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(friendButton);
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(leaderboardButton);
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(logoutButton);
-        mainPanel.add( Box.createVerticalGlue());
+        mainPanel.add(Box.createVerticalGlue());
 
         add(mainPanel);
 
