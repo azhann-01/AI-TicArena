@@ -2,6 +2,8 @@ package gui;
 
 import database.UserDAO;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.*;
 
 public class GameFrame extends JFrame {
@@ -93,7 +95,7 @@ public class GameFrame extends JFrame {
                             }
                             checkWinner();
 
-                            if (!gameOver && aiMode && !xTurn){
+                            if (!gameOver && aiMode && !xTurn) {
                                 makeAIMove();
                             }
                         });
@@ -266,21 +268,116 @@ public class GameFrame extends JFrame {
     }
 
     public void makeAIMove() {
-        
+
+        //Step 1: Can AI win?
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (board[i][j].getText().equals("")) {
-                    board[i][j].setText("O");                   
-                    board[i][j].setEnabled(false);
+                    if (canWin(i, j, "O")) {
+                        board[i][j].setText("O");
+                        board[i][j].setEnabled(false);
+                        xTurn = true;
 
-                    xTurn = true;
-                    turnLabel.setText("Current Turn : X");
+                        turnLabel.setText("Current Turn : X");
 
-                    checkWinner();
-                    return;
+                        checkWinner();
+                        return;
+                    }
                 }
             }
         }
+        
+        // Step 2: Block player's winning move
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (board[i][j].getText().equals("")) {
+                    if (canWin(i, j, "X")) {
+                        board[i][j].setText("O");
+                        board[i][j].setEnabled(false);
+
+                        xTurn = true;
+
+                        turnLabel.setText("Current Turn : X");
+
+                        checkWinner();
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Step 3: Random move
+
+        ArrayList<JButton> emptyCells = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (board[i][j].getText().equals("")) {
+                    emptyCells.add(board[i][j]);
+                }
+            }
+        }
+
+        if (emptyCells.isEmpty())
+            return;
+
+        Random random = new Random();
+
+        JButton move = emptyCells.get(random.nextInt(emptyCells.size()));
+
+        move.setText("O");
+
+        move.setEnabled(false);
+
+        xTurn = true;
+
+        turnLabel.setText("Current Turn : X");
+
+        checkWinner();
+    }
+
+    public boolean canWin(int row, int col, String symbol) {
+
+        board[row][col].setText(symbol);
+
+        // check row
+
+        boolean win = true;
+
+        for (int j = 0; j < 5; j++) {
+
+            if (!board[row][j].getText().equals(symbol)) {
+                win = false;
+                break;
+            }
+        }
+
+        if (win) {
+            board[row][col].setText("");
+            return true;
+        }
+
+        // check column
+
+        win = true;
+
+        for (int i = 0; i < 5; i++) {
+            if (!board[i][col].getText().equals(symbol)) {
+                win = false;
+                break;
+            }
+        }
+
+        if (win) {
+            board[row][col].setText("");
+            return true;
+        }
+
+        board[row][col].setText("");
+
+        return false;
     }
 
     public void disableBoard() {
